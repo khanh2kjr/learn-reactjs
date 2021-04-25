@@ -13,7 +13,6 @@ import React from 'react'
 import { useForm } from 'react-hook-form'
 import * as yup from 'yup'
 import AvatarForm from './components/Avatar'
-import RedirectSignIn from './components/RedirectSignIn'
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -44,24 +43,24 @@ export default function RegisterForm({ onSubmit }) {
   const schema = yup.object().shape({
     firstName: yup
       .string()
-      .required('Please enter your first name')
-      .min(2, 'Please enter at least 2 characters'),
+      .required('Họ không được bỏ trống')
+      .min(2, 'Bạn nhập quá ngắn, vui lòng nhập lớn hơn hoặc bằng 2 ký tự!'),
     lastName: yup
       .string()
-      .required('Please enter your last name')
-      .min(2, 'Please enter at least 2 characters'),
+      .required('Tên không được bỏ trống')
+      .min(2, 'Bạn nhập quá ngắn, vui lòng nhập lớn hơn hoặc bằng 2 ký tự'),
     email: yup
       .string()
-      .required('Please enter your email')
-      .email('Please enter a valid email address'),
+      .required('Email không được bỏ trống')
+      .email('Email bạn nhập không đúng định dạng'),
     password: yup
       .string()
-      .required('Please enter password')
-      .min(6, 'Please enter at least 6 characters'),
+      .required('Mật khẩu không được bỏ trống')
+      .min(6, 'Mật khẩu quá ngắn, vui lòng nhập lớn hơn hoặc bằng 6 ký tự'),
     retypePassword: yup
       .string()
-      .required('Please retype your password')
-      .oneOf([yup.ref('password')], 'Password does not match')
+      .required('Vui lòng nhập lại mật khẩu trên')
+      .oneOf([yup.ref('password')], 'Mật khẩu không khớp')
   })
 
   const form = useForm({
@@ -92,31 +91,30 @@ export default function RegisterForm({ onSubmit }) {
         <form className={classes.form} onSubmit={form.handleSubmit(handleRegisterSubmit)}>
           <Grid container spacing={2}>
             <Grid item xs={12} sm={6}>
-              <InputField form={form} name="firstName" label="First name *" />
+              <InputField form={form} name="firstName" label="Họ *" />
             </Grid>
             <Grid item xs={12} sm={6}>
-              <InputField form={form} name="lastName" label="Last name *" />
+              <InputField form={form} name="lastName" label="Tên *" />
             </Grid>
             <Grid item xs={12}>
-              <InputField form={form} name="email" label="Email address *" />
+              <InputField form={form} name="email" label="Email *" />
             </Grid>
             <Grid item xs={12}>
-              <PasswordField form={form} name="password" label="Password *" />
+              <PasswordField form={form} name="password" label="Mật khẩu *" />
             </Grid>
             <Grid item xs={12}>
               <PasswordField
                 form={form}
                 name="retypePassword"
-                label="Retype Password *"
+                label="Nhập lại mật khẩu *"
               />
             </Grid>
           </Grid>
           <ButtonField
             classNameButton={classes.submit}
-            text="Create an account"
+            text="Đăng ký"
             disabled={isSubmitting}
           />
-          <RedirectSignIn />
         </form>
       </div>
     </Container>

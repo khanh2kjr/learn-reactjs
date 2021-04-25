@@ -1,17 +1,18 @@
 import {
   AppBar,
+  Box,
   Button,
-  IconButton,
+  Dialog,
+  DialogActions,
   makeStyles,
-  Menu,
-  MenuItem,
   Toolbar,
   Typography
 } from '@material-ui/core'
-import AccountCircleIcon from '@material-ui/icons/AccountCircle'
-import { logout } from 'features/Auth/userSlice'
+import AccountBoxIcon from '@material-ui/icons/AccountBox'
+import { ModeSign } from 'constants/mode-sign'
+import Login from 'features/Auth/components/Login'
+import Register from 'features/Auth/components/Register'
 import React, { useState } from 'react'
-import { useDispatch } from 'react-redux'
 import { NavLink } from 'react-router-dom'
 
 const useStyles = makeStyles((theme) => ({
@@ -26,25 +27,35 @@ const useStyles = makeStyles((theme) => ({
   },
   link: {
     color: 'white'
+  },
+  logged: {
+    display: 'flex',
+    justifyContent: 'space-between'
+  },
+  redirect: {
+    textTransform: 'unset'
   }
 }))
 
 export default function Header({ isLoggedIn }) {
   const classes = useStyles()
-  const [anchorEl, setAnchorEl] = useState(null)
-  const dispatch = useDispatch()
+  const [open, setOpen] = useState(false)
+  const [mode, setMode] = useState(ModeSign.LOGIN)
 
-  const handleShowMenu = (e) => {
-    setAnchorEl(e.currentTarget)
+  const handleClickOpen = () => {
+    setOpen(true)
   }
 
-  const handleCloseMenu = () => {
-    setAnchorEl(null)
+  const handleClose = () => {
+    setOpen(false)
   }
 
-  const handleLogoutClick = () => {
-    const action = logout()
-    dispatch(action)
+  const handleRedirectLogin = () => {
+    setMode(ModeSign.LOGIN)
+  }
+
+  const handleRedirectRegister = () => {
+    setMode(ModeSign.REGISTER)
   }
 
   return (
@@ -57,39 +68,56 @@ export default function Header({ isLoggedIn }) {
             </NavLink>
           </Typography>
           {!isLoggedIn ? (
-            <ul>
-              <NavLink className={classes.link} to="/sign-up">
-                <Button color="inherit">Sign Up</Button>
-              </NavLink>
-              <NavLink className={classes.link} to="/sign-in">
-                <Button color="inherit">Sign In</Button>
-              </NavLink>
-            </ul>
-          ) : (
             <>
-              <IconButton color="inherit" onClick={handleShowMenu}>
-                <AccountCircleIcon />
-              </IconButton>
-              <Menu
-                id="simple-menu"
-                anchorEl={anchorEl}
-                keepMounted
-                open={Boolean(anchorEl)}
-                onClose={handleCloseMenu}
-                anchorOrigin={{
-                  vertical: 'bottom',
-                  horizontal: 'left'
-                }}
-                transformOrigin={{
-                  vertical: 'top',
-                  horizontal: 'right'
-                }}
-                getContentAnchorEl={null}
+              <Button color="inherit" onClick={handleClickOpen}>
+                <div className={classes.logged}>
+                  <AccountBoxIcon className={classes.menuButton} />
+                  <span style={{ textTransform: 'none' }}>Đăng nhập / Đăng ký</span>
+                </div>
+              </Button>
+              <Dialog
+                open={open}
+                onClose={handleClose}
+                aria-labelledby="form-dialog-title"
+                disableBackdropClick
               >
-                <MenuItem onClick={handleCloseMenu}>Profile</MenuItem>
-                <MenuItem onClick={handleLogoutClick}>Logout</MenuItem>
-              </Menu>
+                {mode === ModeSign.REGISTER && (
+                  <>
+                    <Register />
+                    <Box textAlign="right" className={classes.menuButton}>
+                      <Button
+                        className={classes.redirect}
+                        onClick={handleRedirectLogin}
+                        color="primary"
+                      >
+                        Bạn đã có tài khoản? Đăng nhập ngay
+                      </Button>
+                    </Box>
+                  </>
+                )}
+                {mode === ModeSign.LOGIN && (
+                  <>
+                    <Login />
+                    <Box textAlign="right" className={classes.menuButton}>
+                      <Button
+                        className={classes.redirect}
+                        onClick={handleRedirectRegister}
+                        color="primary"
+                      >
+                        Bạn chưa có tài khoản? Đăng ký ngay
+                      </Button>
+                    </Box>
+                  </>
+                )}
+                <DialogActions>
+                  <Button onClick={handleClose} color="primary">
+                    Đóng
+                  </Button>
+                </DialogActions>
+              </Dialog>
             </>
+          ) : (
+            'da login'
           )}
         </Toolbar>
       </AppBar>

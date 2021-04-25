@@ -9,7 +9,7 @@ export default function AvatarForm({ classNameAvatar }) {
         <ExitToAppIcon />
       </Avatar>
       <Typography component="h1" variant="h5">
-        Sign in
+        Đăng nhập tài khoản
       </Typography>
     </>
   )

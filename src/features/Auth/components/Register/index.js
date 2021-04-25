@@ -2,14 +2,12 @@ import { unwrapResult } from '@reduxjs/toolkit'
 import { useSnackbar } from 'notistack'
 import React from 'react'
 import { useDispatch } from 'react-redux'
-import { useHistory } from 'react-router-dom'
 import RegisterForm from '../RegisterForm'
 import { register } from './../../userSlice'
 
 export default function Register() {
   const dispatch = useDispatch()
   const { enqueueSnackbar } = useSnackbar()
-  const history = useHistory()
 
   const handleRegisterSubmit = async (formValues) => {
     try {
@@ -28,10 +26,6 @@ export default function Register() {
       unwrapResult(resultAction)
 
       enqueueSnackbar('Register Successfully...', { variant: 'success' })
-
-      history.push({
-        pathname: '/sign-in'
-      })
     } catch (error) {
       enqueueSnackbar(error.message, { variant: 'error' })
     }

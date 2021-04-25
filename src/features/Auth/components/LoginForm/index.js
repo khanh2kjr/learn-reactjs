@@ -13,7 +13,6 @@ import React from 'react'
 import { useForm } from 'react-hook-form'
 import * as yup from 'yup'
 import AvatarForm from './components/Avatar'
-import RedirectSignUp from './components/RedirectSignUp'
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -80,15 +79,14 @@ export default function LoginForm({ onSubmit }) {
               <InputField form={form} name="identifier" label="Email" />
             </Grid>
             <Grid item xs={12}>
-              <PasswordField form={form} name="password" label="Password" />
+              <PasswordField form={form} name="password" label="Mật khẩu" />
             </Grid>
           </Grid>
           <ButtonField
             classNameButton={classes.submit}
-            text="Login"
+            text="Đăng nhập"
             disabled={isSubmitting}
           />
-          <RedirectSignUp />
         </form>
       </div>
     </Container>
