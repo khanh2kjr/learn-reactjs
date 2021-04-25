@@ -5,14 +5,18 @@ import {
   Dialog,
   DialogActions,
   makeStyles,
-  Toolbar,
+  Menu, MenuItem, Toolbar,
   Typography
 } from '@material-ui/core'
 import AccountBoxIcon from '@material-ui/icons/AccountBox'
+import ArrowDropDownSharpIcon from '@material-ui/icons/ArrowDropDownSharp'
 import { ModeSign } from 'constants/mode-sign'
 import Login from 'features/Auth/components/Login'
 import Register from 'features/Auth/components/Register'
+import { logout } from 'features/Auth/userSlice'
+import { useSnackbar } from 'notistack'
 import React, { useState } from 'react'
+import { useDispatch } from 'react-redux'
 import { NavLink } from 'react-router-dom'
 
 const useStyles = makeStyles((theme) => ({
@@ -34,13 +38,28 @@ const useStyles = makeStyles((theme) => ({
   },
   redirect: {
     textTransform: 'unset'
+  },
+  personLog: {
+    backgroundColor: '#2e40a2'
   }
 }))
 
-export default function Header({ isLoggedIn }) {
+export default function Header(props) {
+  const { isLoggedIn, fullName } = props
+  const { enqueueSnackbar } = useSnackbar()
+  const dispatch = useDispatch()
   const classes = useStyles()
   const [open, setOpen] = useState(false)
   const [mode, setMode] = useState(ModeSign.LOGIN)
+  const [anchorEl, setAnchorEl] = useState(null)
+
+  const handleShowMenu = (event) => {
+    setAnchorEl(event.currentTarget)
+  }
+
+  const handleCloseMenu = () => {
+    setAnchorEl(null)
+  }
 
   const handleClickOpen = () => {
     setOpen(true)
@@ -56,6 +75,13 @@ export default function Header({ isLoggedIn }) {
 
   const handleRedirectRegister = () => {
     setMode(ModeSign.REGISTER)
+  }
+
+  const handleLogout = () => {
+    const action = logout()
+
+    dispatch(action)
+    enqueueSnackbar('Logout successfully!', { variant: 'success' })
   }
 
   return (
@@ -117,7 +143,29 @@ export default function Header({ isLoggedIn }) {
               </Dialog>
             </>
           ) : (
-            'da login'
+            <div style={{ textAlign: 'right' }}>
+              <p>Xin chào: {fullName}</p>
+              <Button
+                color="inherit"
+                className={classes.personLog}
+                aria-controls="simple-menu"
+                aria-haspopup="true"
+                onClick={handleShowMenu}
+              >
+                <AccountBoxIcon />
+                <ArrowDropDownSharpIcon />
+              </Button>
+              <Menu
+                id="simple-menu"
+                anchorEl={anchorEl}
+                keepMounted
+                open={Boolean(anchorEl)}
+                onClose={handleClose}
+              >
+                <MenuItem onClick={handleCloseMenu}>Profile</MenuItem>
+                <MenuItem onClick={handleLogout}>Logout</MenuItem>
+              </Menu>
+            </div>
           )}
         </Toolbar>
       </AppBar>

@@ -9,10 +9,11 @@ import './App.scss'
 export default function App() {
   const loggedInUser = useSelector((state) => state.user.current)
   const isLoggedIn = JSON.stringify(loggedInUser) !== '{}'
+  const fullName = loggedInUser?.fullName
 
   return (
     <React.Fragment>
-      <Header isLoggedIn={isLoggedIn} />
+      <Header isLoggedIn={isLoggedIn} fullName={fullName} />
       <Switch>
         <Route path="/" component={HomePage} exact />
         <Route path="/products" component={Product} />
