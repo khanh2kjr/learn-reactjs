@@ -12,6 +12,14 @@ const useStyles = makeStyles((theme) => ({
   },
   right: {
     flex: '1 1 0'
+  },
+  pagination: {
+    display: 'flex',
+    justifyContent: 'center',
+    marginTop: '20px'
+  },
+  pb20: {
+    paddingBottom: '20px'
   }
 }))
 
@@ -22,10 +30,10 @@ export default function ListPage(props) {
   const [loading, setLoading] = useState(true)
   const [filters, setFilters] = useState({
     _page: 1,
-    _limit: 12
+    _limit: 8
   })
   const [pagination, setPagination] = useState({
-    limit: 12,
+    limit: 8,
     total: 10,
     page: 1
   })
@@ -62,17 +70,19 @@ export default function ListPage(props) {
             <Paper elevation={0}>Left</Paper>
           </Grid>
           <Grid className={classes.right} item>
-            <Paper elevation={0}>
+            <Paper elevation={0} className={classes.pb20}>
               {loading ? (
                 <ProductSkeletonList length={10} />
               ) : (
                 <ProductList productList={productList} />
               )}
-              <ProductPagination
-                count={Math.ceil(pagination.total / pagination.limit)}
-                page={pagination.page}
-                onPageChange={handlePageChange}
-              />
+              <Box className={classes.pagination}>
+                <ProductPagination
+                  count={Math.ceil(pagination.total / pagination.limit)}
+                  page={pagination.page}
+                  onPageChange={handlePageChange}
+                />
+              </Box>
             </Paper>
           </Grid>
         </Grid>

@@ -14,7 +14,7 @@ export default function ProductItem({ product }) {
 
   return (
     <Box padding={1}>
-      <Box padding={1}>
+      <Box padding={1} minHeight="200px">
         <img src={thumbnailUrl} alt={product.name} width="100%" />
       </Box>
       <Typography variant="body2">{product.name}</Typography>
