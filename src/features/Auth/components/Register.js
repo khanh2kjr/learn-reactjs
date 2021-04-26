@@ -2,8 +2,8 @@ import { unwrapResult } from '@reduxjs/toolkit'
 import { useSnackbar } from 'notistack'
 import React from 'react'
 import { useDispatch } from 'react-redux'
-import RegisterForm from '../RegisterForm'
-import { register } from './../../userSlice'
+import RegisterForm from './RegisterForm'
+import { register } from '../userSlice'
 
 export default function Register() {
   const dispatch = useDispatch()

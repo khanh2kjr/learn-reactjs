@@ -5,19 +5,21 @@ import {
   Dialog,
   DialogActions,
   makeStyles,
-  Menu, MenuItem, Toolbar,
+  Menu,
+  MenuItem,
+  Toolbar,
   Typography
 } from '@material-ui/core'
 import AccountBoxIcon from '@material-ui/icons/AccountBox'
 import ArrowDropDownSharpIcon from '@material-ui/icons/ArrowDropDownSharp'
 import { ModeSign } from 'constants/mode-sign'
-import Login from 'features/Auth/components/Login'
-import Register from 'features/Auth/components/Register'
+import { Login, Register } from 'features/Auth'
 import { logout } from 'features/Auth/userSlice'
 import { useSnackbar } from 'notistack'
 import React, { useState } from 'react'
 import { useDispatch } from 'react-redux'
 import { NavLink } from 'react-router-dom'
+
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -45,7 +47,7 @@ const useStyles = makeStyles((theme) => ({
 }))
 
 export default function Header(props) {
-  const { isLoggedIn, fullName } = props
+  const { isLoggedIn } = props
   const { enqueueSnackbar } = useSnackbar()
   const dispatch = useDispatch()
   const classes = useStyles()
@@ -144,7 +146,6 @@ export default function Header(props) {
             </>
           ) : (
             <div style={{ textAlign: 'right' }}>
-              <p>Xin chào: {fullName}</p>
               <Button
                 color="inherit"
                 className={classes.personLog}

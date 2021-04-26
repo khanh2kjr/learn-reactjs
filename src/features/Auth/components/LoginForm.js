@@ -1,18 +1,19 @@
 import { yupResolver } from '@hookform/resolvers/yup'
 import {
-  Container,
+  Avatar, Container,
   CssBaseline,
   Grid,
   LinearProgress,
-  makeStyles
+  makeStyles,
+  Typography
 } from '@material-ui/core'
+import ExitToAppIcon from '@material-ui/icons/ExitToApp'
 import ButtonField from 'components/form-controls/ButtonField'
 import InputField from 'components/form-controls/InputField'
 import PasswordField from 'components/form-controls/PasswordField'
 import React from 'react'
 import { useForm } from 'react-hook-form'
 import * as yup from 'yup'
-import AvatarForm from './components/Avatar'
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -71,7 +72,12 @@ export default function LoginForm({ onSubmit }) {
     <Container component="main" maxWidth="xs">
       <CssBaseline />
       <div className={classes.paper}>
-        <AvatarForm classNameAvatar={classes.avatar} />
+        <Avatar className={classes.avatar}>
+          <ExitToAppIcon />
+        </Avatar>
+        <Typography component="h1" variant="h5">
+          Đăng nhập tài khoản
+        </Typography>
         {isSubmitting && <LinearProgress className={classes.linePro} />}
         <form className={classes.form} onSubmit={form.handleSubmit(handleRegisterSubmit)}>
           <Grid container spacing={2}>

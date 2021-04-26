@@ -3,7 +3,7 @@ import { login } from 'features/Auth/userSlice'
 import { useSnackbar } from 'notistack'
 import React from 'react'
 import { useDispatch } from 'react-redux'
-import LoginForm from '../LoginForm'
+import LoginForm from './LoginForm'
 
 export default function Login() {
   const dispatch = useDispatch()

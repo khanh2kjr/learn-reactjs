@@ -1,5 +1,16 @@
-import React from 'react'
+import { Box } from '@material-ui/core';
+import React from 'react';
+import { Route, Switch, useRouteMatch } from 'react-router-dom';
+import ListPage from './pages/ListPage';
 
 export default function ProductFeature() {
-  return <h1>Product</h1>
+  const math = useRouteMatch()
+
+  return (
+    <Box pt={4}>
+      <Switch>
+        <Route path={math.url} component={ListPage} exact />
+      </Switch>
+    </Box>
+    )
 }
