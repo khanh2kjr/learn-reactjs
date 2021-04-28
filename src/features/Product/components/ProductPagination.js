@@ -4,8 +4,8 @@ import React from 'react'
 export default function ProductPagination(props) {
   const { count, page, onPageChange } = props
 
-  const handlePageChange = (e, page) => {
-    onPageChange?.(e, page)
+  const handlePageChange = (e, newPage) => {
+    onPageChange?.(newPage)
   }
 
   return (

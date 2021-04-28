@@ -9,9 +9,15 @@ export default function ProductSort(props) {
   }
 
   return (
-    <Tabs indicatorColor="primary" textColor="primary" aria-label="disabled tabs example" onChange={handleSortChange} value={currentSort}>
-      <Tab label="Giá thấp" value="salePrice:ASC"></Tab>
-      <Tab label="Giá cao" value="salePrice:DESC"></Tab>
+    <Tabs
+      indicatorColor="primary"
+      textColor="primary"
+      aria-label="disabled tabs example"
+      onChange={handleSortChange}
+      value={currentSort}
+    >
+      <Tab label="Giá thấp" value="salePrice:ASC" />
+      <Tab label="Giá cao" value="salePrice:DESC" />
     </Tabs>
   )
 }

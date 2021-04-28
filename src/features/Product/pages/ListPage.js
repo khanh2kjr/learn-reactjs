@@ -1,4 +1,12 @@
-import { Box, Container, Grid, makeStyles, Paper } from '@material-ui/core'
+import {
+  Box,
+
+  Container,
+  Grid,
+  makeStyles,
+  Paper
+} from '@material-ui/core'
+import HighlightOffIcon from '@material-ui/icons/HighlightOff'
 import productApi from 'api/productApi'
 import ProductSkeletonList from 'features/Product/components/ProductSkeletonList'
 import React, { useEffect, useState } from 'react'
@@ -22,6 +30,23 @@ const useStyles = makeStyles((theme) => ({
   },
   pb20: {
     paddingBottom: '20px'
+  },
+  filterByCategory: {
+    backgroundColor: '#CCCCCC',
+    display: 'inline-block',
+    padding: '5px',
+    borderRadius: '5px',
+    marginLeft: theme.spacing(2),
+    marginTop: theme.spacing(2),
+    '& > span': {
+      marginLeft: theme.spacing(1),
+      verticalAlign: 'middle'
+    },
+    '& > svg': {
+      marginLeft: theme.spacing(1),
+      verticalAlign: 'middle',
+      cursor: 'pointer'
+    }
   }
 }))
 
@@ -40,40 +65,63 @@ export default function ListPage(props) {
     total: 10,
     page: 1
   })
+  const [categoryName, setCategoryName] = useState('')
 
   useEffect(() => {
-    try {
-      const fetchProductList = async () => {
+    const fetchProductList = async () => {
+      try {
         const response = await productApi.getAll(filters)
         const { data, pagination } = response
 
         setProductList(data)
         setPagination(pagination)
         setLoading(false)
+      } catch (error) {
+        console.log('Failed to fetch product list: ', error)
       }
-
-      fetchProductList()
-    } catch (error) {
-      console.log('Failed to fetch product list: ', error)
     }
+
+    fetchProductList()
   }, [filters])
 
-  const handlePageChange = (e, page) => {
-    setFilters((prevFilters) => ({
-      ...prevFilters,
-      _page: page
-    }))
+  const renderNewFilters = (filters, newParam, newValueParam) => {
+    return {
+      ...filters,
+      [newParam]: newValueParam
+    }
+  }
+
+  const handlePageChange = (newPage) => {
+    const newFilters = renderNewFilters(filters, '_page', newPage)
+
+    setFilters(newFilters)
   }
 
   const handleSortChange = (newSort) => {
-    setFilters((prevFilters) => ({
-      ...prevFilters,
-      _sort: newSort
-    }))
+    const newFilters = renderNewFilters(filters, '_sort', newSort)
+
+    setFilters(newFilters)
   }
 
-  const handleFilterChange = () => {
+  const handleFilterChange = (newFilters) => {
+    setFilters({
+      ...filters,
+      ...newFilters,
+    })
+    console.log(newFilters)
+    // setCategoryName(newFilters.categoryName)
+  }
+
+  const handleCloseCategory = () => {
+    setCategoryName('')
     
+    const newFilters = {
+      ...filters
+    }
+
+    delete newFilters['category.id']
+    
+    setFilters(newFilters)
   }
 
   return (
@@ -82,16 +130,25 @@ export default function ListPage(props) {
         <Grid container spacing={1}>
           <Grid className={classes.left} item>
             <Paper elevation={0}>
-              <ProductFilter filters={filters} onFilterChange={handleFilterChange} />
+              <ProductFilter onFilterChange={handleFilterChange} />
             </Paper>
           </Grid>
           <Grid className={classes.right} item>
             <Paper elevation={0} className={classes.pb20}>
               <Box>
-                <ProductSort onSortChange={handleSortChange} currentSort={filters._sort} />
+                <ProductSort
+                  onSortChange={handleSortChange}
+                  currentSort={filters._sort}
+                />
               </Box>
+              {categoryName && (
+                <Box component="span" className={classes.filterByCategory}>
+                  <span>{categoryName}</span>
+                  <HighlightOffIcon onClick={handleCloseCategory} />
+                </Box>
+              )}
               {loading ? (
-                <ProductSkeletonList length={8} />
+                <ProductSkeletonList length={pagination.limit} />
               ) : (
                 <ProductList productList={productList} />
               )}

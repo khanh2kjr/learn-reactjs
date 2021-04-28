@@ -4,7 +4,6 @@ import Product from 'pages/Product'
 import React from 'react'
 import { useSelector } from 'react-redux'
 import { Route, Switch } from 'react-router-dom'
-import './App.scss'
 
 export default function App() {
   const loggedInUser = useSelector((state) => state.user.current)
