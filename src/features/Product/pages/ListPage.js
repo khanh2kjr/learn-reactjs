@@ -2,7 +2,7 @@ import { Box, Container, Grid, makeStyles, Paper, Typography } from '@material-u
 import productApi from 'api/productApi'
 import ProductSkeletonList from 'features/Product/components/ProductSkeletonList'
 import queryString from 'query-string'
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import { useHistory, useLocation } from 'react-router'
 import ProductFilter from '../components/ProductFilter'
 import ProductList from '../components/ProductList'
@@ -54,17 +54,23 @@ export default function ListPage() {
   const classes = useStyles()
   const history = useHistory()
   const location = useLocation()
-  const queryParam = queryString.parse(location.search)
+
+  const queryParam = useMemo(() => {
+    const params =  queryString.parse(location.search)
+
+    return {
+      ...params,
+      _page: Number.parseInt(params._page) || 1,
+      _limit: Number.parseInt(params._limit) || 8,
+      _sort: params._sort || 'salePrice:ASC',
+      isPromotion: params.isPromotion === 'true',
+      isFreeShip: params.isFreeShip === 'true',
+    }
+  }, [location.search])
 
   const [productList, setProductList] = useState([])
   const [count, setCount] = useState(0)
   const [loading, setLoading] = useState(true)
-  const [filters, setFilters] = useState(() => ({
-    ...queryParam,
-    _page: Number.parseInt(queryParam._page) || 1,
-    _limit: Number.parseInt(queryParam._limit) || 8,
-    _sort: queryParam._sort || 'salePrice:ASC'
-  }))
   const [pagination, setPagination] = useState({
     limit: 8,
     total: 10,
@@ -72,16 +78,9 @@ export default function ListPage() {
   })
 
   useEffect(() => {
-    history.push({
-      pathname: history.location.pathname,
-      search: queryString.stringify(filters)
-    })
-  }, [history, filters])
-
-  useEffect(() => {
     const fetchProductList = async () => {
       try {
-        const response = await productApi.getAll(filters)
+        const response = await productApi.getAll(queryParam)
         const { data, pagination } = response
         const count = data.length
 
@@ -95,7 +94,7 @@ export default function ListPage() {
     }
 
     fetchProductList()
-  }, [filters])
+  }, [queryParam])
 
   const renderNewFilters = (filters, newParam, newValueParam) => {
     return {
@@ -105,26 +104,40 @@ export default function ListPage() {
   }
 
   const handlePageChange = (newPage) => {
-    const newFilters = renderNewFilters(filters, '_page', newPage)
+    const newFilters = renderNewFilters(queryParam, '_page', newPage)
 
-    setFilters(newFilters)
+    history.push({
+      pathname: history.location.pathname,
+      search: queryString.stringify(newFilters)
+    })
   }
 
   const handleSortChange = (newSort) => {
-    const newFilters = renderNewFilters(filters, '_sort', newSort)
+    const newFilters = renderNewFilters(queryParam, '_sort', newSort)
 
-    setFilters(newFilters)
+    history.push({
+      pathname: history.location.pathname,
+      search: queryString.stringify(newFilters)
+    })
   }
 
   const handleFilterChange = (newFilters) => {
-    setFilters({
-      ...filters,
+    const filters = {
+      ...queryParam,
       ...newFilters
+    }
+
+    history.push({
+      pathname: history.location.pathname,
+      search: queryString.stringify(filters)
     })
   }
 
   const handleViewerChange = (newValues) => {
-    setFilters(newValues)
+    history.push({
+      pathname: history.location.pathname,
+      search: queryString.stringify(newValues)
+    })
   }
 
   return (
@@ -133,7 +146,7 @@ export default function ListPage() {
         <Grid container spacing={1}>
           <Grid className={classes.left} item>
             <Paper elevation={0}>
-              <ProductFilter filters={filters} onFilterChange={handleFilterChange} />
+              <ProductFilter filters={queryParam} onFilterChange={handleFilterChange} />
             </Paper>
           </Grid>
           <Grid className={classes.right} item>
@@ -141,9 +154,9 @@ export default function ListPage() {
               <Box>
                 <ProductSort
                   onSortChange={handleSortChange}
-                  currentSort={filters._sort}
+                  currentSort={queryParam._sort}
                 />
-                <FilterViewer filters={filters} onViewerChange={handleViewerChange} />
+                <FilterViewer filters={queryParam} onViewerChange={handleViewerChange} />
               </Box>
               {!count && !loading ? (
                 <Typography className={classes.productIsNull}>

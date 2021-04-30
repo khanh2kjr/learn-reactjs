@@ -5,7 +5,7 @@ import {
   makeStyles,
   Typography
 } from '@material-ui/core'
-import React, { useState } from 'react'
+import React from 'react'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -28,11 +28,6 @@ export default function FilterByService({ onServiceChange, filters }) {
   ]
 
   const classes = useStyles()
-  // const [values, setValues] = useState({
-  //   isPromotion: Boolean(filters.isPromotion),
-  //   isFreeShip: Boolean(filters.isFreeShip)
-  // })
-
   const handleServiceChange = (e) => {
     const checked = e.target.checked
     const name = e.target.name
@@ -60,7 +55,7 @@ export default function FilterByService({ onServiceChange, filters }) {
                     onChange={handleServiceChange}
                   />
                 }
-                    label={service.label}
+                label={service.label}
               />
             </li>
           )
