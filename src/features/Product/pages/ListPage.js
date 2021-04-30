@@ -6,6 +6,7 @@ import ProductFilter from '../components/ProductFilter'
 import ProductList from '../components/ProductList'
 import ProductPagination from '../components/ProductPagination'
 import ProductSort from '../components/ProductSort'
+import FilterViewer from './../components/FilterViewer';
 
 const useStyles = makeStyles((theme) => ({
   root: {},
@@ -63,7 +64,7 @@ export default function ListPage() {
     total: 10,
     page: 1
   })
-
+  
   useEffect(() => {
     const fetchProductList = async () => {
       try {
@@ -109,13 +110,17 @@ export default function ListPage() {
     })
   }
 
+  const handleViewerChange = (newValues) => {
+    setFilters(newValues)
+  }
+
   return (
     <Box>
       <Container>
         <Grid container spacing={1}>
           <Grid className={classes.left} item>
             <Paper elevation={0}>
-              <ProductFilter onFilterChange={handleFilterChange} />
+              <ProductFilter filters={filters} onFilterChange={handleFilterChange} />
             </Paper>
           </Grid>
           <Grid className={classes.right} item>
@@ -125,6 +130,7 @@ export default function ListPage() {
                   onSortChange={handleSortChange}
                   currentSort={filters._sort}
                 />
+                <FilterViewer filters={filters} onViewerChange={handleViewerChange} />
               </Box>
               {!count && !loading ? (
                 <Typography className={classes.productIsNull}>
