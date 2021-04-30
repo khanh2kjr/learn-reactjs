@@ -1,12 +1,14 @@
 import { Box, Container, Grid, makeStyles, Paper, Typography } from '@material-ui/core'
 import productApi from 'api/productApi'
 import ProductSkeletonList from 'features/Product/components/ProductSkeletonList'
+import queryString from 'query-string'
 import React, { useEffect, useState } from 'react'
+import { useHistory, useLocation } from 'react-router'
 import ProductFilter from '../components/ProductFilter'
 import ProductList from '../components/ProductList'
 import ProductPagination from '../components/ProductPagination'
 import ProductSort from '../components/ProductSort'
-import FilterViewer from './../components/FilterViewer';
+import FilterViewer from './../components/FilterViewer'
 
 const useStyles = makeStyles((theme) => ({
   root: {},
@@ -50,21 +52,32 @@ const useStyles = makeStyles((theme) => ({
 
 export default function ListPage() {
   const classes = useStyles()
+  const history = useHistory()
+  const location = useLocation()
+  const queryParam = queryString.parse(location.search)
 
   const [productList, setProductList] = useState([])
   const [count, setCount] = useState(0)
   const [loading, setLoading] = useState(true)
-  const [filters, setFilters] = useState({
-    _page: 1,
-    _limit: 8,
-    _sort: 'salePrice:ASC'
-  })
+  const [filters, setFilters] = useState(() => ({
+    ...queryParam,
+    _page: Number.parseInt(queryParam._page) || 1,
+    _limit: Number.parseInt(queryParam._limit) || 8,
+    _sort: queryParam._sort || 'salePrice:ASC'
+  }))
   const [pagination, setPagination] = useState({
     limit: 8,
     total: 10,
     page: 1
   })
-  
+
+  useEffect(() => {
+    history.push({
+      pathname: history.location.pathname,
+      search: queryString.stringify(filters)
+    })
+  }, [history, filters])
+
   useEffect(() => {
     const fetchProductList = async () => {
       try {
