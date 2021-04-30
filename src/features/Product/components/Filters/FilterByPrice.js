@@ -1,48 +1,63 @@
-import { Box, Typography, TextField, Button } from '@material-ui/core'
-import React, { useState } from 'react'
+import { yupResolver } from '@hookform/resolvers/yup'
+import { Box, makeStyles, Typography } from '@material-ui/core'
+import ButtonField from 'components/form-controls/ButtonField'
+import InputField from 'components/form-controls/InputField'
+import React from 'react'
+import { useForm } from 'react-hook-form'
+import * as yup from 'yup'
+
+const useStyles = makeStyles((theme) => ({
+  root: {
+    padding: theme.spacing(2)
+  },
+  form: {
+    marginTop: theme.spacing(2)
+  },
+  formField: {
+    display: 'flex',
+  },
+  field: {
+    marginRight: theme.spacing(1)
+  },
+  buttonSubmit: {
+    marginTop: theme.spacing(1)
+  }
+}))
 
 export default function FilterByPrice({ onPriceChange }) {
-  const [values, setValues] = useState({
-    salePrice_gte: 0,
-    salePrice_lte: 0
+  const classes = useStyles()
+
+  const schema = yup.object().shape({
+    salePrice_gte: yup
+      .number()
+      .typeError('Xin hãy nhập đúng định dạng số'),
+    salePrice_lte: yup
+      .number()
+      .typeError('Xin hãy nhập đúng định dạng số')
   })
 
-  const handleValueChange = (e) => {
-    const value = e.target.value
-    const key = e.target.name
+  const form = useForm({
+    defaultValues: {
+      salePrice_gte: 0,
+      salePrice_lte: 0
+    },
+    resolver: yupResolver(schema)
+  })
 
-    const newValues = {
-      ...values,
-      [key]: value
-    }
-
-    setValues(newValues)
-  }
-
-  const handlePriceChange = () => {
+  const handlePriceChange = (values) => {
     onPriceChange?.(values)
   }
 
   return (
-    <Box>
+    <Box className={classes.root}>
       <Typography variant="subtitle2">GIÁ</Typography>
-      <Box>
-        <TextField
-          label="Min"
-          name="salePrice_gte"
-          value={values.salePrice_gte}
-          onChange={handleValueChange}
-        />
-        <TextField
-          label="Max"
-          name="salePrice_lte"
-          value={values.salePrice_lte}
-          onChange={handleValueChange}
-        />
-      </Box>
-      <Button variant="outlined" color="primary" onClick={handlePriceChange}>
-        Áp dụng
-      </Button>
+      <form onSubmit={form.handleSubmit(handlePriceChange)} className={classes.form}>
+        <Box className={classes.formField}>
+          <InputField className={classes.field} label="Min" name="salePrice_gte" form={form} />
+          <InputField label="Max" name="salePrice_lte" form={form} />
+        </Box>
+        <ButtonField classNameButton={classes.buttonSubmit} text="Áp dụng" />
+      </form>
     </Box>
   )
 }

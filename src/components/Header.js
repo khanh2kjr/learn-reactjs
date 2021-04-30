@@ -43,6 +43,9 @@ const useStyles = makeStyles((theme) => ({
   },
   personLog: {
     backgroundColor: '#2e40a2'
+  },
+  menuItem: {
+    color: 'white',
   }
 }))
 
@@ -146,6 +149,9 @@ export default function Header(props) {
             </>
           ) : (
             <div style={{ textAlign: 'right' }}>
+              <Button style={{marginRight: '10px'}}>
+                <NavLink className={classes.menuItem} to="/products">Sản phẩm</NavLink>
+              </Button>
               <Button
                 color="inherit"
                 className={classes.personLog}

@@ -1,12 +1,4 @@
-import {
-  Box,
-
-  Container,
-  Grid,
-  makeStyles,
-  Paper
-} from '@material-ui/core'
-import HighlightOffIcon from '@material-ui/icons/HighlightOff'
+import { Box, Container, Grid, makeStyles, Paper, Typography } from '@material-ui/core'
 import productApi from 'api/productApi'
 import ProductSkeletonList from 'features/Product/components/ProductSkeletonList'
 import React, { useEffect, useState } from 'react'
@@ -18,7 +10,7 @@ import ProductSort from '../components/ProductSort'
 const useStyles = makeStyles((theme) => ({
   root: {},
   left: {
-    width: '250px'
+    width: '360px'
   },
   right: {
     flex: '1 1 0'
@@ -47,13 +39,19 @@ const useStyles = makeStyles((theme) => ({
       verticalAlign: 'middle',
       cursor: 'pointer'
     }
+  },
+  productIsNull: {
+    textAlign: 'center',
+    fontSize: '1.2rem',
+    marginTop: theme.spacing(1)
   }
 }))
 
-export default function ListPage(props) {
+export default function ListPage() {
   const classes = useStyles()
 
   const [productList, setProductList] = useState([])
+  const [count, setCount] = useState(0)
   const [loading, setLoading] = useState(true)
   const [filters, setFilters] = useState({
     _page: 1,
@@ -65,16 +63,17 @@ export default function ListPage(props) {
     total: 10,
     page: 1
   })
-  const [categoryName, setCategoryName] = useState('')
 
   useEffect(() => {
     const fetchProductList = async () => {
       try {
         const response = await productApi.getAll(filters)
         const { data, pagination } = response
+        const count = data.length
 
         setProductList(data)
         setPagination(pagination)
+        setCount(count)
         setLoading(false)
       } catch (error) {
         console.log('Failed to fetch product list: ', error)
@@ -106,22 +105,8 @@ export default function ListPage(props) {
   const handleFilterChange = (newFilters) => {
     setFilters({
       ...filters,
-      ...newFilters,
+      ...newFilters
     })
-    console.log(newFilters)
-    // setCategoryName(newFilters.categoryName)
-  }
-
-  const handleCloseCategory = () => {
-    setCategoryName('')
-    
-    const newFilters = {
-      ...filters
-    }
-
-    delete newFilters['category.id']
-    
-    setFilters(newFilters)
   }
 
   return (
@@ -141,11 +126,12 @@ export default function ListPage(props) {
                   currentSort={filters._sort}
                 />
               </Box>
-              {categoryName && (
-                <Box component="span" className={classes.filterByCategory}>
-                  <span>{categoryName}</span>
-                  <HighlightOffIcon onClick={handleCloseCategory} />
-                </Box>
+              {!count && !loading ? (
+                <Typography className={classes.productIsNull}>
+                  Không có sản phẩm tương ứng
+                </Typography>
+              ) : (
+                ''
               )}
               {loading ? (
                 <ProductSkeletonList length={pagination.limit} />

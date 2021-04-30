@@ -1,6 +1,7 @@
 import { Box, makeStyles, Typography } from '@material-ui/core'
 import categoryApi from 'api/categoryApi'
 import React, { useEffect, useState } from 'react'
+import CategorySkeletonList from '../CategorySkeletonList'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -26,6 +27,7 @@ const useStyles = makeStyles((theme) => ({
 
 export default function FilterByCategory({ onCategoryChange }) {
   const [categoryList, setCategoryList] = useState([])
+  const [loading, setLoading] = useState(true)
 
   const classes = useStyles()
 
@@ -34,6 +36,7 @@ export default function FilterByCategory({ onCategoryChange }) {
       try {
         const categoryList = await categoryApi.getAll()
 
+        setLoading(false)
         setCategoryList(
           categoryList.map((category) => {
             return {
@@ -57,15 +60,20 @@ export default function FilterByCategory({ onCategoryChange }) {
   return (
     <Box className={classes.root}>
       <Typography variant="subtitle2">DANH MỤC SẢN PHẨM</Typography>
-      <ul className={classes.menu}>
-        {categoryList.map((category) => {
-          return (
-            <li key={category.id} onClick={() => handleCategoryChange(category)}>
-              <Typography variant="body2">{category.name}</Typography>
-            </li>
-          )
-        })}
-      </ul>
+
+      {loading ? (
+        <CategorySkeletonList length={6} />
+      ) : (
+        <ul className={classes.menu}>
+          {categoryList.map((category) => {
+            return (
+              <li key={category.id} onClick={() => handleCategoryChange(category)}>
+                <Typography variant="body2">{category.name}</Typography>
+              </li>
+            )
+          })}
+        </ul>
+      )}
     </Box>
   )
 }
