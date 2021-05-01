@@ -73,6 +73,8 @@ export default function RegisterForm({ onSubmit }) {
       password: '',
       retypePassword: ''
     },
+    mode: 'onSubmit',
+    reValidateMode: 'onChange',
     resolver: yupResolver(schema)
   })
 

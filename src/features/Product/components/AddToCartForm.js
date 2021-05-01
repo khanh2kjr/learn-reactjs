@@ -13,10 +13,13 @@ export default function AddToCartForm({ onAddToCart }) {
     defaultValues: {
       quantity: 1,
     },
+    mode: 'onChange',
     resolver: yupResolver(schema)
   })
 
-  const handleAddToCart = (values) => {}
+  const handleAddToCart = (values) => {
+    onAddToCart?.(values)
+  }
 
   return (
     <form onSubmit={form.handleSubmit(handleAddToCart)}>

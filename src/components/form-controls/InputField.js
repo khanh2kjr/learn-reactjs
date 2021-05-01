@@ -3,20 +3,21 @@ import { Controller } from 'react-hook-form'
 
 export default function InputField(props) {
   const { form, name, label } = props
-  const { control, formState } = form
-  const { errors } = formState
-  const hasError = errors[name]
+  const { control } = form
 
   return (
     <Controller
       name={name}
       control={control}
-      render={({ onChange, onBlur, value, name }) => {
+      render={({
+        field: {onChange, onBlur, value, name },
+        fieldState: { invalid, isTouched, error }
+      }) => {
         return (
           <TextField
             name={name}
-            error={!!hasError}
-            helperText={hasError?.message}
+            error={isTouched && invalid}
+            helperText={error?.message}
             label={label}
             variant="outlined"
             fullWidth

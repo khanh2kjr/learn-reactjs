@@ -57,6 +57,8 @@ export default function LoginForm({ onSubmit }) {
       identifier: '',
       password: ''
     },
+    mode: 'onSubmit',
+    reValidateMode: 'onChange',
     resolver: yupResolver(schema)
   })
 
