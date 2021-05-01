@@ -1,12 +1,12 @@
 # Basic Shopping Cart Project
 
-# Setup & run start
+### Setup & run start
 ```
   npm install
   npm start
 ```
 
-## Folder structure
+### Folder structure
 
 ```
 public
@@ -22,6 +22,7 @@ src
 |__ index.js (entry point của ứng dụng làm nhiệm vụ render cây dom lên ui)
 ```
 
-/products --> Product list / List page
-/products/:productId --> Product Item / Detail page
+### Routes
+- /products --> Product list / List page
+- /products/:productId --> Product Item / Detail page
 
