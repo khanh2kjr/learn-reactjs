@@ -1,13 +1,26 @@
-import { Box, Container, Grid, makeStyles, Paper } from '@material-ui/core'
+import {
+  Box,
+  Container,
+  Grid,
+  LinearProgress,
+  makeStyles,
+  Paper
+} from '@material-ui/core'
 import React from 'react'
-import { useRouteMatch } from 'react-router'
+import { Route, Switch, useRouteMatch } from 'react-router'
 import AddToCartForm from '../components/AddToCartForm'
+import ProductAdditional from '../components/ProductAdditional'
+import ProductDecription from '../components/ProductDecription'
 import ProductInfo from '../components/ProductInfo'
+import ProductMenu from '../components/ProductMenu'
 import ProductThumbnail from '../components/ProductThumbnail'
 import useProductDetail from './../hooks/useProductDetail'
+import ProductReviews from './../components/ProductReviews'
 
 const useStyles = makeStyles((theme) => ({
-  root: {},
+  root: {
+    paddingBottom: theme.spacing(3)
+  },
   left: {
     width: '400px',
     padding: theme.spacing(1.5),
@@ -15,7 +28,8 @@ const useStyles = makeStyles((theme) => ({
   },
   right: {
     flex: '1 1 0',
-    padding: theme.spacing(1.5)
+    padding: theme.spacing(1.5),
+    borderBottom: `1px solid ${theme.palette.grey[300]}`
   }
 }))
 
@@ -23,19 +37,23 @@ export default function DetailPage() {
   const classes = useStyles()
 
   const math = useRouteMatch()
-  const { params } = math
+  const { params, url } = math
   const { productId } = params
 
   const { product, loading } = useProductDetail(productId)
 
   if (loading) {
-    return 'Loading'
+    return (
+      <Box>
+        <LinearProgress />
+      </Box>
+    )
   }
 
   const handleAddToCart = (values) => {
     console.log(values)
   }
-  
+
   return (
     <Box>
       <Container>
@@ -50,6 +68,18 @@ export default function DetailPage() {
             </Grid>
           </Grid>
         </Paper>
+        <ProductMenu />
+        <Switch>
+          <Route exact path={url}>
+            <ProductDecription product={product} />
+          </Route>
+          <Route exact path={`${url}/additional`}>
+            <ProductAdditional product={product} />
+          </Route>
+          <Route exact path={`${url}/reviews`}>
+            <ProductReviews product={product} />
+          </Route>
+        </Switch>
       </Container>
     </Box>
   )

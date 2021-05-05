@@ -5,7 +5,6 @@ import { formatPrice } from 'utils'
 const useStyles = makeStyles((theme) => ({
   root: {
     paddingBottom: theme.spacing(2),
-    borderBottom: `1px solid ${theme.palette.grey[300]}`
   },
   description: {
     margin: theme.spacing(2, 0)
