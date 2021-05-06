@@ -1,25 +1,28 @@
 import {
   AppBar,
+  Badge,
   Box,
   Button,
   Dialog,
   DialogActions,
+  IconButton,
   makeStyles,
   Menu,
   MenuItem,
   Toolbar,
   Typography
 } from '@material-ui/core'
+import { ShoppingCart } from '@material-ui/icons'
 import AccountBoxIcon from '@material-ui/icons/AccountBox'
 import ArrowDropDownSharpIcon from '@material-ui/icons/ArrowDropDownSharp'
 import { ModeSign } from 'constants/mode-sign'
 import { Login, Register } from 'features/Auth'
 import { logout } from 'features/Auth/userSlice'
+import { cartItemsCountSelector } from 'features/Cart/selectors'
 import { useSnackbar } from 'notistack'
 import React, { useState } from 'react'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { NavLink } from 'react-router-dom'
-
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -45,7 +48,7 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: '#2e40a2'
   },
   menuItem: {
-    color: 'white',
+    color: 'white'
   }
 }))
 
@@ -57,6 +60,7 @@ export default function Header(props) {
   const [open, setOpen] = useState(false)
   const [mode, setMode] = useState(ModeSign.LOGIN)
   const [anchorEl, setAnchorEl] = useState(null)
+  const cartItemsCount = useSelector(cartItemsCountSelector)
 
   const handleShowMenu = (event) => {
     setAnchorEl(event.currentTarget)
@@ -149,9 +153,18 @@ export default function Header(props) {
             </>
           ) : (
             <div style={{ textAlign: 'right' }}>
-              <Button style={{marginRight: '10px'}}>
-                <NavLink className={classes.menuItem} to="/products">Sản phẩm</NavLink>
+              <Button style={{ marginRight: '10px' }}>
+                <NavLink className={classes.menuItem} to="/products">
+                  Sản phẩm
+                </NavLink>
               </Button>
+              <NavLink to="/cart" className={classes.menuItem}>
+                <IconButton aria-label="show 4 new mails" color="inherit">
+                  <Badge badgeContent={cartItemsCount} color="secondary">
+                    <ShoppingCart />
+                  </Badge>
+                </IconButton>
+              </NavLink>
               <Button
                 color="inherit"
                 className={classes.personLog}

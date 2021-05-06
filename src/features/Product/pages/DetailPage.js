@@ -6,7 +6,9 @@ import {
   makeStyles,
   Paper
 } from '@material-ui/core'
+import { addToCart } from 'features/Cart/cartSlice'
 import React from 'react'
+import { useDispatch } from 'react-redux'
 import { Route, Switch, useRouteMatch } from 'react-router'
 import AddToCartForm from '../components/AddToCartForm'
 import ProductAdditional from '../components/ProductAdditional'
@@ -14,8 +16,8 @@ import ProductDecription from '../components/ProductDecription'
 import ProductInfo from '../components/ProductInfo'
 import ProductMenu from '../components/ProductMenu'
 import ProductThumbnail from '../components/ProductThumbnail'
-import useProductDetail from './../hooks/useProductDetail'
 import ProductReviews from './../components/ProductReviews'
+import useProductDetail from './../hooks/useProductDetail'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -35,7 +37,7 @@ const useStyles = makeStyles((theme) => ({
 
 export default function DetailPage() {
   const classes = useStyles()
-
+  const dispatch = useDispatch()
   const math = useRouteMatch()
   const { params, url } = math
   const { productId } = params
@@ -51,7 +53,13 @@ export default function DetailPage() {
   }
 
   const handleAddToCart = (values) => {
-    console.log(values)
+    const action = addToCart({
+      id: product.id,
+      product,
+      quantity: values.quantity
+    })
+    console.log(action)
+    dispatch(action)
   }
 
   return (
