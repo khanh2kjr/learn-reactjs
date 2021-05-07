@@ -23,7 +23,7 @@ export default function QuantityField(props) {
         }) => {
           return (
             <>
-              <FormControl error={isTouched && invalid} fullWidth variant="outlined">
+              <FormControl  error={isTouched && invalid} fullWidth variant="outlined">
                 <InputLabel>{label}</InputLabel>
                 <OutlinedInput
                   name={name}

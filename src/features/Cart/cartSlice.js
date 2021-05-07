@@ -31,7 +31,7 @@ const cartSlice = createSlice({
       const index = state.cartItems.findIndex(x => x.id === id)
 
       if (index >= 0) {
-        state.cartItems[index].quantity = quantity
+        state.cartItems[index].quantity = Number.parseInt(quantity)
       }
     },
     removeFromCart(state, action) {
